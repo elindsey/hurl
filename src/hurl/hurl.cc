@@ -523,11 +523,11 @@ public:
             static std::uniform_int_distribution<> dist(0x01000000, 0xFFFFFFFF);
 
             uint32_t randaddr = htonl(dist(rd));
-            std::string randipstr(INET_ADDRSTRLEN, '#');
-            inet_ntop(AF_INET, &randaddr, randipstr.data(), INET_ADDRSTRLEN);
+            char randip[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &randaddr, randip, INET_ADDRSTRLEN);
 
-            m_headers[xfwdkey].clear();
-            m_headers[xfwdkey].push_back(std::move(randipstr));
+            std::string randipstr(randip);
+            set_header(xfwdkey, randipstr);
         }
         // Initialize
         int32_t init_with_url(const std::string &a_url);
