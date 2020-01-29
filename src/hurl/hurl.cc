@@ -515,6 +515,8 @@ public:
         }
         void set_random_xfwd_header()
         {
+            const std::string xfwdkey = "X-Forwarded-For";
+
             // add an x-forwarded-for header for a random ip
             // skip 0.0.0.0/8; ip ranges from 1.0.0.0 to 255.255.255.255
             static std::random_device rd;
@@ -524,7 +526,8 @@ public:
             std::string randipstr(INET_ADDRSTRLEN, '#');
             inet_ntop(AF_INET, &randaddr, randipstr.data(), INET_ADDRSTRLEN);
 
-            set_header("X-Forwarded-For", randipstr);
+            m_headers[xfwdkey].clear();
+            m_headers[xfwdkey].push_back(std::move(randipstr));
         }
         // Initialize
         int32_t init_with_url(const std::string &a_url);
